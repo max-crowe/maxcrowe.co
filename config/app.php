@@ -57,5 +57,5 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
-    'aliases' => Facade::defaultAliases()->toArray(),
+    'aliases' => Facade::defaultAliases()->toArray()
 ];

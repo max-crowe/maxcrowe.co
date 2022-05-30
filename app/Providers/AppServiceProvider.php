@@ -2,20 +2,12 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Utilities\FriendlyNameResolver;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
     /**
      * Bootstrap any application services.
      *
@@ -23,6 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Main navigation
+        View::share('navRoutes', [
+            'home',
+            'projects',
+            'contact'
+        ]);
+        View::share('friendlyNameResolver', new FriendlyNameResolver);
     }
 }

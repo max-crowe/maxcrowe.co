@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
+use App\Auth\UserProvider;
 use App\Models\User;
 use App\Rules\MinimumEntropy;
 use App\Rules\Printable;
-use Illuminate\Auth\EloquentUserProvider;
-use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Auth\UserProvider as UserProviderInterface;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -28,8 +28,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(UserProvider::class, function ($app) {
-            return $app->makeWith(EloquentUserProvider::class, [
+        $this->app->bind(UserProviderInterface::class, function ($app) {
+            return $app->makeWith(UserProvider::class, [
                 'model' => User::class
             ]);
         });

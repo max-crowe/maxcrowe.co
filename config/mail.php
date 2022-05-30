@@ -40,4 +40,6 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'maxbot@maxcrowe.co'),
         'name' => env('MAIL_FROM_NAME', 'Maxbot'),
     ],
+    'message_max_length' => env('MAIL_MESSAGE_MAX_LENGTH', 2048),
+    'forward_to' => env('MAIL_FORWARD_TO')
 ];

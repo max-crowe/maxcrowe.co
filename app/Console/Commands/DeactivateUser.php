@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Support\Facades\App;
 
 class DeactivateUser extends Command
@@ -31,17 +32,13 @@ class DeactivateUser extends Command
     {
         $email = $this->argument('user');
         $provider = App::make(UserProvider::class);
-        $user = $provider->createModel()->newQuery()->where(
-            'email', $email
-        )->first();
-        if ($user === null) {
-            $this->error('The user "'.$email.'" does not exist.');
-        } elseif (!$user->is_active) {
-            $this->error('The user "'.$email.'" has already been deactivated.');
-        } else {
-            $user->is_active = false;
-            $user->save();
+        try {
+            $provider->deactivate($email);
             $this->info('User "'.$email.'" deactivated successfully.');
+        } catch (RecordsNotFoundException $e) {
+            $this->error('The user "'.$email.'" does not exist.');
+        } catch (\Exception $e) {
+            $this->error($e->toString());
         }
     }
 }

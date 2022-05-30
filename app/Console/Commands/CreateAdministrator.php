@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -43,9 +42,7 @@ class CreateAdministrator extends Command
                 Validator::make(['email' => $email], ['email' => [
                     'email',
                     function ($attribute, $value, $fail) use ($provider) {
-                        if ($provider->createModel()->newQuery()->where(
-                            'email', $value
-                        )->exists()) {
+                        if ($provider->emailInUse($value)) {
                             $fail('The user "'.$value.'" already exists.');
                         }
                     }
@@ -75,12 +72,7 @@ class CreateAdministrator extends Command
             }
         }
         $name = $this->ask('Name (optional)');
-        $user = $provider->createModel();
-        $user->email = $email;
-        $user->name = $name ?? '';
-        $user->password = Hash::make($password);
-        $user->is_administrator = true;
-        $user->save();
+        $provider->createAdministrator($email, $password, ['name' => $name ?? '']);
         $this->info('Administrator "'.$email.'" created successfully.');
     }
 }
