@@ -34,21 +34,15 @@ class ContactController extends BaseController
      */
     public function submit(ContactRequest $request): BaseResponse
     {
-        if ($request->has('boite_diabolique')) {
-            /* If the honeypot field is present, behave as though the request
-            succeeded, but discard the data. */
-            Log::info('Honeypot trapped contact form submission from '.$request->ip());
-        } else {
-            $submission = ContactFormSubmission::create([
-                'email' => $request->input('email'),
-                'name' => $request->input('name'),
-                'message' => $request->input('message')
-            ]);
-            if (!config('app.debug')) {
-                Mail::to(config('mail.forward_to'))->send(
-                    new ContactFormSubmissionMailable($submission)
-                );
-            }
+        $submission = ContactFormSubmission::create([
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
+            'message' => $request->input('message')
+        ]);
+        if (!config('app.debug')) {
+            Mail::to(config('mail.forward_to'))->send(
+                new ContactFormSubmissionMailable($submission)
+            );
         }
         return redirect()->route('home')->with('status', 'success')->with(
             'message', "Thanks for getting in touch! I'll get back to you as soon as I can."

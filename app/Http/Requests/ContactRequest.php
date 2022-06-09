@@ -25,7 +25,8 @@ class ContactRequest extends FormRequest
     {
         return [
             'email' => 'email',
-            'message' => 'required|max:'.config('mail.message_max_length')
+            'message' => 'required|max:'.config('mail.message_max_length'),
+            'human_proof' => 'required|regex:/chicago/i'
         ];
     }
 }
